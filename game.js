@@ -24,6 +24,7 @@ function sleep(ms) {
 function playSound(name) {
   var audio = new Audio("sounds/" + name + ".mp3");
   audio.play();
+  audio.volume = 0.1;
   $("#" + name).fadeIn(100).fadeOut(100).fadeIn(100);
 
 }
