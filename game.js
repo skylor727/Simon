@@ -54,6 +54,7 @@ function checkAnswer(currentLevel) {
     if (userClickedPattern.length === gamePattern.length) {
       setTimeout(function() {
         userClickedPattern = [];
+        playPreviousPattern();
         nextSequence();
       }, 1000);
     }
@@ -73,4 +74,11 @@ function startOver() {
   gamePattern = [];
   userClickedPattern = [];
   isGameStarted = false;
+}
+
+function playPreviousPattern() {
+  for(var i = 0; i < gamePattern.length; i ++) {
+    animatePress(gamePattern[i]);
+    playSound(gamePattern[i]);
+  }
 }
