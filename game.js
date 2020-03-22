@@ -14,6 +14,12 @@ $(".btn").click(function() {
   checkAnswer(userClickedPattern.length - 1);
 });
 
+// Sleep for x ms
+// This returns an async promise that needs to
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 //This function is used to play the click audio
 function playSound(name) {
   var audio = new Audio("sounds/" + name + ".mp3");
@@ -49,20 +55,21 @@ $("body").keydown(function() {
 
 });
 //Comparing the users entry vs the game generated array
-function checkAnswer(currentLevel) {
+async function checkAnswer(currentLevel) {
   if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
     if (userClickedPattern.length === gamePattern.length) {
-      setTimeout(function() {
-        userClickedPattern = [];
-        playPreviousPattern();
-        nextSequence();
-      }, 1000);
+
+      userClickedPattern = [];
+
+      await sleep(1000);
+      await playPreviousPattern();
+      nextSequence();
     }
   } else {
     playSound("wrong");
     $("h1").text("Game over, Press Any Key To Restart");
     $("body").addClass("game-over");
-    setTimeout(function() {
+    setTimeout(function() {;
       $("body").removeClass("game-over");
     }, 200);
     startOver();
@@ -76,9 +83,11 @@ function startOver() {
   isGameStarted = false;
 }
 
-function playPreviousPattern() {
+async function playPreviousPattern() {
   for(var i = 0; i < gamePattern.length; i ++) {
     animatePress(gamePattern[i]);
     playSound(gamePattern[i]);
+    await sleep(500)
   }
+
 }
