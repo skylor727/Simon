@@ -15,7 +15,7 @@ $(".btn").click(function() {
 });
 
 // Sleep for x ms
-// This returns an async promise that needs to be awaited
+// This returns an async promise that needs to
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -63,7 +63,6 @@ async function checkAnswer(currentLevel) {
 
       await sleep(1000);
       await playPreviousPattern();
-      await sleep(500)
       nextSequence();
     }
   } else {
@@ -86,9 +85,9 @@ function startOver() {
 
 async function playPreviousPattern() {
   for(var i = 0; i < gamePattern.length; i ++) {
-    await sleep(500)
     animatePress(gamePattern[i]);
     playSound(gamePattern[i]);
+    await sleep(500)
   }
 
 }
