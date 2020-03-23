@@ -3,21 +3,23 @@ var gamePattern = [];
 var userClickedPattern = [];
 var level = 0;
 var isGameStarted = false;
-
+var previousPatternPlaying = false;
 
 //Testing what button was clicked and adding it to the users choice array to keep track of
-$(".btn").click(function() {
-  var userChosenColor = $(this).attr("id");
-  userClickedPattern.push(userChosenColor);
-  playSound(userChosenColor);
-  animatePress(userChosenColor);
-  checkAnswer(userClickedPattern.length - 1);
-});
+if (!previousPatternPlaying) {
+  $(".btn").click(function() {
+    var userChosenColor = $(this).attr("id");
+    userClickedPattern.push(userChosenColor);
+    playSound(userChosenColor);
+    animatePress(userChosenColor);
+    checkAnswer(userClickedPattern.length - 1);
+  });
+}
 
 // Sleep for x ms
 // This returns an async promise that needs to
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 //This function is used to play the click audio
@@ -43,14 +45,15 @@ function nextSequence() {
   var randomChosenColor = buttonColors[randomNumber];
   gamePattern.push(randomChosenColor);
   playSound(randomChosenColor);
-  $("#level-title").text("Level " + level);
-  level++;
+
+
 }
 //Checking for the initial keypress to active the game
 $("body").keydown(function() {
   if (!isGameStarted) {
     nextSequence();
     isGameStarted = true;
+    $("#level-title").text("Level " + level);
 
   }
 
@@ -59,10 +62,11 @@ $("body").keydown(function() {
 async function checkAnswer(currentLevel) {
   if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
     if (userClickedPattern.length === gamePattern.length) {
-
+      level++;
+      $("#level-title").text("Level " + level);
       userClickedPattern = [];
-
       await sleep(1000);
+      previousPatternPlaying = true;
       await playPreviousPattern();
       nextSequence();
     }
@@ -70,7 +74,8 @@ async function checkAnswer(currentLevel) {
     playSound("wrong");
     $("h1").text("Game over, Press Any Key To Restart");
     $("body").addClass("game-over");
-    setTimeout(function() {;
+    setTimeout(function() {
+      ;
       $("body").removeClass("game-over");
     }, 200);
     startOver();
@@ -85,10 +90,11 @@ function startOver() {
 }
 
 async function playPreviousPattern() {
-  for(var i = 0; i < gamePattern.length; i ++) {
+
+  for (var i = 0; i < gamePattern.length; i++) {
     animatePress(gamePattern[i]);
     playSound(gamePattern[i]);
     await sleep(500)
   }
-
+  previousPatternPlaying = false;
 }
