@@ -6,15 +6,17 @@ var isGameStarted = false;
 var previousPatternPlaying = false;
 
 //Testing what button was clicked and adding it to the users choice array to keep track of
-if (!previousPatternPlaying) {
-  $(".btn").click(function() {
+
+$(".btn").click(function() {
+    if (!previousPatternPlaying) {
     var userChosenColor = $(this).attr("id");
     userClickedPattern.push(userChosenColor);
     playSound(userChosenColor);
     animatePress(userChosenColor);
     checkAnswer(userClickedPattern.length - 1);
-  });
-}
+  }
+});
+
 
 // Sleep for x ms
 // This returns an async promise that needs to
